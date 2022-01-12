@@ -27,5 +27,23 @@ class MainActivity : AppCompatActivity() {
                 )
             )
         }
+
+        findViewById<Button>(R.id.btn_lab7).setOnClickListener {
+            startActivity(
+                Intent(
+                    this,
+                    Lab7Activity::class.java
+                )
+            )
+        }
+
+        findViewById<Button>(R.id.btn_lab8).setOnClickListener {
+            startActivity(
+                Intent(
+                    this,
+                    Lab8Activity::class.java
+                )
+            )
+        }
     }
 }

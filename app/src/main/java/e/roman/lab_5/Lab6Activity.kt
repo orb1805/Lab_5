@@ -9,7 +9,6 @@ import e.roman.lab_5.databinding.ActivityLab6Binding
 import e.roman.mathematics.Drawer
 import e.roman.mathematics.PIF
 import e.roman.mathematics.Table2DFunctionSnapshot
-import kotlin.math.cos
 import kotlin.math.exp
 import kotlin.math.pow
 import kotlin.math.sin
@@ -109,7 +108,7 @@ class Lab6Activity : AppCompatActivity() {
             .drawFunction(u!![index], Color.RED)
             .drawFunction(HyperbolicSolver.Companion::actualFunction, u!![index], Color.BLUE)
             .draw("x", "u(t,x)")
-        tvTSign.text = "t = ${u!![index].first().t}"
+        tvTSign.text = "t = ${u!![index].first().y}"
     }
 
     private fun previousSnapshot() {
@@ -122,7 +121,7 @@ class Lab6Activity : AppCompatActivity() {
             .drawFunction(u!![index], Color.RED)
             .drawFunction(HyperbolicSolver.Companion::actualFunction, u!![index], Color.BLUE)
             .draw("x", "u(t,x)")
-        tvTSign.text = "t = ${u!![index].first().t}"
+        tvTSign.text = "t = ${u!![index].first().y}"
     }
 
     private fun initSolver() {

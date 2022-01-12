@@ -24,5 +24,48 @@ class SystemSolver {
             x.reverse()
             return x
         }
+
+        fun luSolve(a: Matrix, b: MutableList<Float>): MutableList<Float> {
+            var l = Matrix(a.data.size, 1f)
+            val u = Matrix.copy(a) //Matrix(a.data.size, a.data.size, 0f)
+            var m: Matrix
+            for (i in a.data.indices) {
+                m = Matrix(a.data.size, 1f)
+                for (j in i + 1 until a.data.size) {
+                    m.data[j][i] = u.data[j][i] / u.data[i][i]
+                    for (k in a.data.indices) {
+                        u.data[j][k] -= m.data[j][i] * u.data[i][k]
+                    }
+                }
+                l = Matrix.multiply(l, m)
+            }
+            val z = solveZ(b, l)
+            return solveX(z, u)
+        }
+
+        private fun solveX(z: MutableList<Float>, u: Matrix): MutableList<Float> {
+            val x = mutableListOf<Float>()
+            for (i in z.indices)
+                x.add(0f)
+            x[x.lastIndex] = z.last() / u.data.last().last()
+            for (i in x.lastIndex - 1 downTo 0) {
+                x[i] = z[i]
+                for (j in i + 1..x.lastIndex)
+                    x[i] -= u.data[i][j] * x[j]
+                x[i] /= u.data[i][i]
+            }
+            return x
+        }
+
+        private fun solveZ(b: MutableList<Float>, l: Matrix): MutableList<Float> {
+            val z = mutableListOf<Float>()
+            z.add(b[0])
+            for (i in 1 until b.size) {
+                z.add(b[i])
+                for (j in 0 until i)
+                    z[z.lastIndex] -= l.data[i][j] * z[j]
+            }
+            return z
+        }
     }
 }

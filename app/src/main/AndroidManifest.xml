@@ -11,6 +11,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Lab_5">
         <activity
+            android:name=".Lab8Activity"
+            android:exported="true" />
+        <activity
+            android:name=".Lab7Activity"
+            android:exported="true" />
+        <activity
             android:name=".Lab6Activity"
             android:exported="true" />
         <activity

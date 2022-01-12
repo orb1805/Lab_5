@@ -16,3 +16,4 @@ internal fun Editable?.toInt() =
     } catch (e: Exception) {
         0
     }
+

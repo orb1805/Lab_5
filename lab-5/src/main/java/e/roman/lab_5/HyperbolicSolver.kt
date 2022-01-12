@@ -1,11 +1,8 @@
 package e.roman.lab_5
 
-import android.util.Log
 import e.roman.mathematics.SystemSolver
 import e.roman.mathematics.Table2DFunctionSnapshot
 import e.roman.mathematics.preLast
-import java.lang.Exception
-import kotlin.math.cos
 import kotlin.math.exp
 import kotlin.math.pow
 import kotlin.math.sin
@@ -29,10 +26,6 @@ class HyperbolicSolver(
 
     val explicitSolution: List<List<Table2DFunctionSnapshot>> by lazy { solveExplicit() }
     val implicitSolution: List<List<Table2DFunctionSnapshot>> by lazy {
-        /*solveImplicit(
-            psi1,
-            { x -> psi1(x) + psi2(x) * tau }
-        )*/
         solveImplicit(
             psi1,
             { x, t -> psi1(x) + psi2(x) * tau + (a * ddPsi1(x) + b * dPsi1(x) + c * psi1(x) + f(x, t) * tau.pow(2) / 2f) }
@@ -87,14 +80,14 @@ class HyperbolicSolver(
         var x = 0f
         var t = 0f
         for (i in 0..xCount) {
-            u.first() += Table2DFunctionSnapshot(x, t, x1(x)/*psi1(x)*/)
+            u.first() += Table2DFunctionSnapshot(x, t, x1(x))
             x += h
         }
         t += tau
         u += mutableListOf<Table2DFunctionSnapshot>()
         x = 0f
         for (i in 0..xCount) {
-            u.last() += Table2DFunctionSnapshot(x, t, x2(x, t)/*psi1(x) + psi2(x) * tau*/)
+            u.last() += Table2DFunctionSnapshot(x, t, x2(x, t))
             x += h
         }
         t += tau

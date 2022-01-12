@@ -47,6 +47,29 @@ class Drawer(
         return this
     }
 
+    fun drawFunctionFromPairs(table: List<Pair<Float, Float>>, color: Int = Color.BLACK): Drawer {
+        paint.color = color
+        /*val tableToDraw = mutableListOf<Pair<Float, Float>>()
+        table.forEach {
+            tableToDraw += it.x to it.value
+        }*/
+        val tableToDraw = table
+        val maxY = tableToDraw.maxByOrNull { it.second }?.second ?: return this
+        val minY = tableToDraw.minByOrNull { it.second }?.second ?: return this
+        val maxX = tableToDraw.last().first
+        val minX = tableToDraw.first().first
+        tablesToDraw += tableToDraw.toMutableList() to color
+        if (minX < this.minX ?: (minX + 1f))
+            this.minX = minX
+        if (minY < this.minY ?: (minY + 1f))
+            this.minY = minY
+        if (maxX > this.maxX ?: (maxX - 1f))
+            this.maxX = maxX
+        if (maxY > this.maxY ?: (maxY - 1f))
+            this.maxY = maxY
+        return this
+    }
+
     fun drawFunction(
         function: ((Float, Float) -> Float),
         coordinates: List<Table2DFunctionSnapshot>,
@@ -55,7 +78,7 @@ class Drawer(
         val tableToDraw = mutableListOf<Pair<Float, Float>>()
         paint.color = color
         coordinates.forEach {
-            tableToDraw += it.x to function(it.x, it.t)
+            tableToDraw += it.x to function(it.x, it.y)
         }
         val maxY = tableToDraw.maxByOrNull { it.second }?.second ?: return this
         val minY = tableToDraw.minByOrNull { it.second }?.second ?: return this
@@ -81,9 +104,9 @@ class Drawer(
         var tableToDraw = mutableListOf<Pair<Float, Float>>()
         paint.color = color
         table.forEach { tList ->
-            val max = tList.maxByOrNull { abs(it.value - function(it.x, it.t)) } ?: return@forEach
-            val maxError = abs(max.value - function(max.x, max.t))
-            tableToDraw += max.t to maxError
+            val max = tList.maxByOrNull { abs(it.value - function(it.x, it.y)) } ?: return@forEach
+            val maxError = abs(max.value - function(max.x, max.y))
+            tableToDraw += max.y to maxError
         }
         tableToDraw = tableToDraw.filter { it.second.isFinite() && it.second < 10f.pow(5) }.toMutableList()
         val maxY = tableToDraw.maxByOrNull { it.second }?.second ?: return this
@@ -102,11 +125,15 @@ class Drawer(
         return this
     }
 
-    fun draw(xSign: String = "x", ySign: String = "y") {
+    fun draw(xSign: String = "x", ySign: String = "y"/*, minX: Float = 0f, minY: Float = 0f, maxX: Float = 1f, maxY: Float = 1f*/) {
         minX ?: return
         minY ?: return
         maxX ?: return
         maxY ?: return
+        /*this.minX = minX
+        this.minY = minY
+        this.maxX = maxX
+        this. maxY = maxY*/
         val multY = (height - FONT_SIZE_VERTICAL * 2f) / (maxY!! - minY!!)
         val multX = width / (maxX!! - minX!!)
         canvas.drawColor(backgroundColor)
@@ -125,25 +152,25 @@ class Drawer(
         paint.textSize = FONT_SIZE_VERTICAL
         paint.typeface = Typeface.MONOSPACE
         paint.color = Color.BLACK
-        canvas.drawText(maxY!!, 0f, FONT_SIZE_VERTICAL, paint)
+        canvas.drawText(maxY!!, 0f, FONT_SIZE_VERTICAL * 2f, paint)
         if (abs(minY!!) > 0.0001f)
             canvas.drawText(minY!!, 0f, height, paint)
         canvas.drawText(maxY!! - (maxY!! - minY!!) / 2f, 0f, height / 2f, paint)
-        canvas.drawText(maxX!!, width - /*maxX.toString().length*/3f * FONT_SIZE_HORIZONTAL, height, paint)
+        canvas.drawText(maxX!!, width - maxX!!.toString().length * FONT_SIZE_HORIZONTAL, height, paint)
         if (abs(minX!!) > 0.0001f)
             canvas.drawText(minX!!, 0f, height, paint)
-        canvas.drawText((maxX!! - (maxX!! - minX!!) / 2f), height, width / 2f, paint)
+        canvas.drawText((maxX!! - (maxX!! - minX!!) / 2f), width / 2f , height, paint)
         imageView.setImageBitmap(bitmap)
         tablesToDraw.clear()
-        minX = null
-        minY = null
-        maxX = null
-        maxY = null
+        this.minX = null
+        this.minY = null
+        this.maxX = null
+        this.maxY = null
     }
 
     companion object {
 
         const val FONT_SIZE_VERTICAL = 25f
-        const val FONT_SIZE_HORIZONTAL = FONT_SIZE_VERTICAL / 1.5f
+        const val FONT_SIZE_HORIZONTAL = 9f
     }
 }

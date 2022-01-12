@@ -45,4 +45,23 @@ fun Canvas.drawText(text: Float, x: Float, y: Int, paint: Paint) =
 fun Canvas.drawText(text: Float, x: Int, y: Float, paint: Paint) =
     drawText(text, x.toFloat(), y, paint)
 
+fun List<Float>.infNorm(): Float {
+    var max = 0f
+    for (i in this.indices){
+        if (abs(this[i]) > max)
+            max = abs(this[i])
+    }
+    return max
+}
+
+fun List<Float>.toMatrix(size: Int): Matrix {
+    val result = Matrix(size, size)
+    for (i in 0 until size) {
+        for (j in 0 until size) {
+            result.data[i][j] = this[i * size + j]
+        }
+    }
+    return result
+}
+
 const val PIF = PI.toFloat()
